@@ -24,14 +24,24 @@ function statusClass(status) {
   return 'bg-gray-700 text-gray-300'
 }
 
-export default function SpriteGroup({ baseName, sprites, collection, onToggle }) {
+export default function SpriteGroup({ baseName, sprites, collection, filter = 'all', onToggle }) {
   const isOneOff = sprites.length === 1 && sprites[0].variant === null
   const baseSprite = sprites.find(s => s.variant === 'base' || s.variant === null)
   const baseRarity = baseSprite?.rarity ?? 'rare'
 
-  const orderedVariants = isOneOff
+  const allVariants = isOneOff
     ? sprites
     : VARIANT_ORDER.map(v => sprites.find(s => s.variant === v)).filter(Boolean)
+
+  const orderedVariants = filter === 'all'
+    ? allVariants
+    : allVariants.filter(s => {
+        const status = collection[s.id] ?? null
+        if (filter === 'missing') return status === null
+        if (filter === 'acquired') return status === 'acquired'
+        if (filter === 'mastered') return status === 'mastered'
+        return true
+      })
 
   function handleTap(sprite) {
     if (!onToggle) return

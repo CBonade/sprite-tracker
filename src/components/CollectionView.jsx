@@ -139,6 +139,7 @@ export default function CollectionView({ userId, isReadOnly = false }) {
           baseName={baseName}
           sprites={list}
           collection={collection}
+          filter={filter}
           onToggle={isReadOnly ? null : handleToggle}
         />
       ))}
