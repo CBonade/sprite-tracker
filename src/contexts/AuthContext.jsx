@@ -9,13 +9,17 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    console.log('hash on mount:', window.location.hash)
+
+    supabase.auth.getSession().then(({ data: { session }, error }) => {
+      console.log('getSession result:', session, error)
       setSession(session)
       if (session) fetchProfile(session.user.id)
       else setLoading(false)
     })
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log('auth event:', event, session)
       setSession(session)
       if (session) {
         fetchProfile(session.user.id)
