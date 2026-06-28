@@ -44,7 +44,10 @@ export default function CollectionView({ userId, isReadOnly = false }) {
         .eq('sprite_id', spriteId)
     } else {
       await supabase.from('user_collections')
-        .upsert({ user_id: userId, sprite_id: spriteId, status: next, updated_at: new Date().toISOString() })
+        .upsert(
+          { user_id: userId, sprite_id: spriteId, status: next, updated_at: new Date().toISOString() },
+          { onConflict: 'user_id,sprite_id' },
+        )
     }
   }
 
