@@ -1,5 +1,5 @@
 const VARIANT_ORDER = ['base', 'gold', 'gummy', 'galaxy']
-const VARIANT_LABEL = { base: 'B', gold: 'G', gummy: 'Gm', galaxy: 'Gl' }
+const VARIANT_LABEL = { base: 'Base', gold: 'Gold', gummy: 'Gum', galaxy: 'Gal' }
 
 const RARITY_CLASS = {
   rare: 'bg-blue-600',
@@ -60,7 +60,7 @@ export default function SpriteGroup({ baseName, sprites, collection, onToggle })
               key={sprite.id}
               onClick={() => handleTap(sprite)}
               disabled={!onToggle}
-              className={`w-9 h-9 rounded-lg text-xs font-bold transition-transform ${statusClass(status)} ${onToggle ? 'active:scale-90' : 'cursor-default'}`}
+              className={`w-10 h-9 rounded-lg text-[10px] font-bold transition-transform ${statusClass(status)} ${onToggle ? 'active:scale-90' : 'cursor-default'}`}
               title={sprite.full_name}
             >
               {isOneOff ? '●' : VARIANT_LABEL[sprite.variant]}
