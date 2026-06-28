@@ -4,11 +4,13 @@ import SpriteGroup from './SpriteGroup'
 
 const FILTERS = ['all', 'missing', 'acquired', 'mastered']
 const FILTER_LABELS = { all: 'All', missing: 'Missing', acquired: 'Acquired', mastered: 'Mastered' }
+const RARITY_ORDER = { rare: 1, epic: 2, legendary: 3, mythic: 4 }
 
 export default function CollectionView({ userId, isReadOnly = false }) {
   const [sprites, setSprites] = useState([])
   const [collection, setCollection] = useState({})
   const [filter, setFilter] = useState('all')
+  const [sort, setSort] = useState('default')
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -55,17 +57,28 @@ export default function CollectionView({ userId, isReadOnly = false }) {
   }, [sprites])
 
   const filteredGroups = useMemo(() => {
-    if (filter === 'all') return groups
-    return groups.filter(([, list]) =>
-      list.some(sprite => {
-        const status = collection[sprite.id] ?? null
-        if (filter === 'missing') return status === null
-        if (filter === 'acquired') return status === 'acquired'
-        if (filter === 'mastered') return status === 'mastered'
-        return true
+    const filtered = filter === 'all'
+      ? groups
+      : groups.filter(([, list]) =>
+          list.some(sprite => {
+            const status = collection[sprite.id] ?? null
+            if (filter === 'missing') return status === null
+            if (filter === 'acquired') return status === 'acquired'
+            if (filter === 'mastered') return status === 'mastered'
+            return true
+          })
+        )
+
+    if (sort === 'alpha') return [...filtered].sort(([a], [b]) => a.localeCompare(b))
+    if (sort === 'rarity') {
+      return [...filtered].sort(([, aList], [, bList]) => {
+        const aRarity = aList.find(s => s.variant === 'base' || s.variant === null)?.rarity
+        const bRarity = bList.find(s => s.variant === 'base' || s.variant === null)?.rarity
+        return (RARITY_ORDER[aRarity] ?? 99) - (RARITY_ORDER[bRarity] ?? 99)
       })
-    )
-  }, [groups, collection, filter])
+    }
+    return filtered
+  }, [groups, collection, filter, sort])
 
   const total = sprites.length
   const owned = Object.keys(collection).length
@@ -77,9 +90,18 @@ export default function CollectionView({ userId, isReadOnly = false }) {
 
   return (
     <div>
-      <div className="px-4 py-3 flex gap-4 text-sm text-gray-400 border-b border-gray-800">
+      <div className="px-4 py-3 flex items-center gap-4 text-sm text-gray-400 border-b border-gray-800">
         <span><span className="text-white font-semibold">{owned}</span>/{total} acquired</span>
         <span><span className="text-green-400 font-semibold">{mastered}</span> mastered</span>
+        <select
+          value={sort}
+          onChange={e => setSort(e.target.value)}
+          className="ml-auto bg-gray-800 text-gray-300 text-xs rounded-lg px-2 py-1 outline-none border border-gray-700"
+        >
+          <option value="default">Default order</option>
+          <option value="alpha">A–Z</option>
+          <option value="rarity">By rarity</option>
+        </select>
       </div>
 
       <div className="flex border-b border-gray-800">
