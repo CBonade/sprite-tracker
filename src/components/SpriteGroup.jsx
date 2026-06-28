@@ -19,9 +19,9 @@ const RARITY_LABEL = {
 }
 
 function statusClass(status) {
-  if (status === 'mastered') return 'bg-green-500 text-white'
-  if (status === 'acquired') return 'bg-amber-500 text-white'
-  return 'bg-gray-700 text-gray-500'
+  if (status === 'mastered') return 'bg-green-700 text-green-100'
+  if (status === 'acquired') return 'bg-amber-700 text-amber-100'
+  return 'bg-gray-700 text-gray-300'
 }
 
 export default function SpriteGroup({ baseName, sprites, collection, onToggle }) {
