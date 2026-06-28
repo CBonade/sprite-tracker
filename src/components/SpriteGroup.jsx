@@ -41,18 +41,18 @@ export default function SpriteGroup({ baseName, sprites, collection, onToggle })
   }
 
   return (
-    <div className="flex items-center gap-3 px-4 py-3 border-b border-gray-800">
-      <div className="flex-1 min-w-0 flex items-center gap-2">
+    <div className="px-4 py-3 border-b border-gray-800">
+      <div className="flex items-center gap-2 mb-2">
         <span
           className={`text-xs font-bold px-1.5 py-0.5 rounded text-white shrink-0 ${RARITY_CLASS[baseRarity] ?? ''}`}
           style={RARITY_STYLE[baseRarity] ?? undefined}
         >
           {RARITY_LABEL[baseRarity]}
         </span>
-        <span className="text-white text-sm font-medium truncate">{baseName}</span>
+        <span className="text-white text-sm font-medium">{baseName}</span>
       </div>
 
-      <div className="flex gap-1.5 shrink-0">
+      <div className="flex flex-wrap gap-1.5">
         {orderedVariants.map(sprite => {
           const status = collection[sprite.id] ?? null
           return (
