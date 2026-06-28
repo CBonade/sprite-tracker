@@ -36,6 +36,28 @@ alter table public.sprites enable row level security;
 create policy "sprites_select" on public.sprites
   for select to authenticated using (true);
 
+-- follows (must exist before user_collections RLS references it)
+create table public.follows (
+  follower_id uuid references public.profiles(id) on delete cascade,
+  following_id uuid references public.profiles(id) on delete cascade,
+  created_at timestamptz default now() not null,
+  primary key (follower_id, following_id)
+);
+
+alter table public.follows enable row level security;
+
+create policy "follows_select" on public.follows
+  for select to authenticated using (follower_id = auth.uid());
+
+create policy "follows_insert" on public.follows
+  for insert to authenticated with check (follower_id = auth.uid());
+
+create policy "follows_delete" on public.follows
+  for delete to authenticated using (follower_id = auth.uid());
+
+create index follows_follower_idx on public.follows (follower_id);
+create index follows_following_idx on public.follows (following_id);
+
 -- user_collections
 create table public.user_collections (
   id uuid primary key default gen_random_uuid(),
@@ -66,25 +88,3 @@ create policy "collections_delete" on public.user_collections
   for delete to authenticated using (auth.uid() = user_id);
 
 create index user_collections_user_idx on public.user_collections (user_id);
-
--- follows
-create table public.follows (
-  follower_id uuid references public.profiles(id) on delete cascade,
-  following_id uuid references public.profiles(id) on delete cascade,
-  created_at timestamptz default now() not null,
-  primary key (follower_id, following_id)
-);
-
-alter table public.follows enable row level security;
-
-create policy "follows_select" on public.follows
-  for select to authenticated using (follower_id = auth.uid());
-
-create policy "follows_insert" on public.follows
-  for insert to authenticated with check (follower_id = auth.uid());
-
-create policy "follows_delete" on public.follows
-  for delete to authenticated using (follower_id = auth.uid());
-
-create index follows_follower_idx on public.follows (follower_id);
-create index follows_following_idx on public.follows (following_id);
