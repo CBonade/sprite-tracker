@@ -1,14 +1,14 @@
 // Usage: node --env-file=.env scripts/upsert-sprites.js '[{...}, ...]'
 // Or:    node --env-file=.env scripts/upsert-sprites.js path/to/sprites.json
 //
-// Each sprite object:
+// Each sprite object (sort_order optional — auto-assigned if omitted):
 // {
 //   base_name: string,          e.g. "Water"
 //   variant: string | null,     "base" | "gold" | "gummy" | "galaxy" | null (for one-offs)
 //   full_name: string,          e.g. "Gold Water Sprite"
 //   rarity: string,             "rare" | "epic" | "legendary" | "mythic" | "special"
 //   is_starter: boolean,
-//   sort_order: number
+//   sort_order?: number
 // }
 
 import { createClient } from '@supabase/supabase-js'
@@ -34,6 +34,21 @@ try {
   } catch (err) {
     console.error('Failed to parse input:', err.message)
     process.exit(1)
+  }
+}
+
+const needsOrder = sprites.some(s => s.sort_order == null)
+if (needsOrder) {
+  const { data: maxRow } = await supabase
+    .from('sprites')
+    .select('sort_order')
+    .order('sort_order', { ascending: false })
+    .limit(1)
+    .single()
+
+  let next = (maxRow?.sort_order ?? 0) + 1
+  for (const s of sprites) {
+    if (s.sort_order == null) s.sort_order = next++
   }
 }
 
