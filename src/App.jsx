@@ -42,12 +42,14 @@ function AppShell() {
   return (
     <div className="min-h-screen bg-gray-900 flex flex-col">
       <div className="flex-1 overflow-auto pb-16">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/friends" element={<Friends />} />
-          <Route path="/friend/:userId" element={<FriendView />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+        <div className="max-w-2xl mx-auto">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/friends" element={<Friends />} />
+            <Route path="/friend/:userId" element={<FriendView />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </div>
       </div>
       <NavBar />
     </div>
