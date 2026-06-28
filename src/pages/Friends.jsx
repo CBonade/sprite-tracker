@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
+import gummyFishy from '../assets/gummy_fishy_sprite.webp'
 
 export default function Friends() {
   const { profile } = useAuth()
@@ -101,7 +102,10 @@ export default function Friends() {
       {!query.trim() && (
         <div>
           {following.length === 0 && (
-            <div className="text-gray-500 text-sm text-center py-12">Search above to add friends</div>
+            <div className="flex flex-col items-center py-12 gap-3">
+              <img src={gummyFishy} alt="" className="w-16 h-16 object-contain opacity-40" />
+              <div className="text-gray-500 text-sm">Search above to add friends</div>
+            </div>
           )}
           {following.map(user => (
             <div key={user.id} className="flex items-center justify-between px-4 py-3 border-b border-gray-800">

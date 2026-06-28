@@ -5,11 +5,13 @@ import NavBar from './components/NavBar'
 import Home from './pages/Home'
 import Friends from './pages/Friends'
 import FriendView from './pages/FriendView'
+import galaxyAura from './assets/galaxy_aura_sprite.webp'
 
 function LoginScreen() {
   const { signInWithGoogle } = useAuth()
   return (
     <div className="min-h-screen bg-gray-900 flex flex-col items-center justify-center gap-6 p-8">
+      <img src={galaxyAura} alt="Galaxy Aura Sprite" className="w-48 h-48 object-contain drop-shadow-2xl" />
       <div className="text-center">
         <h1 className="text-3xl font-bold text-white mb-2">Sprite Tracker</h1>
         <p className="text-gray-400">Track your Fortnite sprite collection</p>

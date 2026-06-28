@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { supabase } from '../lib/supabase'
 import SpriteGroup from './SpriteGroup'
+import goldGhost from '../assets/gold_ghost_sprite.webp'
 
 const FILTERS = ['all', 'missing', 'acquired', 'mastered']
 const FILTER_LABELS = { all: 'All', missing: 'Missing', acquired: 'Acquired', mastered: 'Mastered' }
@@ -124,7 +125,10 @@ export default function CollectionView({ userId, isReadOnly = false }) {
       </div>
 
       {filteredGroups.length === 0 && (
-        <div className="text-gray-500 text-center py-12 text-sm">Nothing here</div>
+        <div className="flex flex-col items-center py-12 gap-3">
+          <img src={goldGhost} alt="" className="w-16 h-16 object-contain opacity-40" />
+          <div className="text-gray-500 text-sm">Nothing here</div>
+        </div>
       )}
       {filteredGroups.map(([baseName, list]) => (
         <SpriteGroup
