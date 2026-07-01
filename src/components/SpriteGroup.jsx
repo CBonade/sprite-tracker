@@ -88,7 +88,7 @@ export default function SpriteGroup({ baseName, sprites, collection, filter = 'a
                   <img
                     src={crownMastered}
                     alt=""
-                    className="absolute -top-2 left-1/2 -translate-x-1/2 w-6 drop-shadow"
+                    className="absolute -top-1.5 -right-1.5 w-4 drop-shadow"
                   />
                 )}
               </button>
