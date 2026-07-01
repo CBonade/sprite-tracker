@@ -1,3 +1,5 @@
+import crownMastered from '../assets/crown_mastered.png'
+
 const VARIANT_ORDER = ['base', 'gold', 'gummy', 'galaxy']
 const VARIANT_LABEL = { base: 'Base', gold: 'Gold', gummy: 'Gum', galaxy: 'Gal' }
 
@@ -65,6 +67,34 @@ export default function SpriteGroup({ baseName, sprites, collection, filter = 'a
       <div className="flex flex-wrap gap-1.5">
         {orderedVariants.map(sprite => {
           const status = collection[sprite.id] ?? null
+
+          if (sprite.image_url) {
+            return (
+              <button
+                key={sprite.id}
+                onClick={() => handleTap(sprite)}
+                disabled={!onToggle}
+                className={`relative w-10 h-9 rounded-lg overflow-visible transition-transform ${onToggle ? 'active:scale-90' : 'cursor-default'}`}
+                title={sprite.full_name}
+              >
+                <div className="w-full h-full rounded-lg bg-gray-800 overflow-hidden">
+                  <img
+                    src={sprite.image_url}
+                    alt={sprite.full_name}
+                    className={`w-full h-full object-cover transition-opacity ${status ? 'opacity-100' : 'opacity-35'}`}
+                  />
+                </div>
+                {status === 'mastered' && (
+                  <img
+                    src={crownMastered}
+                    alt=""
+                    className="absolute -top-2 left-1/2 -translate-x-1/2 w-6 drop-shadow"
+                  />
+                )}
+              </button>
+            )
+          }
+
           return (
             <button
               key={sprite.id}
