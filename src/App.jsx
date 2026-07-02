@@ -43,7 +43,7 @@ function AppShell() {
 
   return (
     <div className="min-h-screen bg-gray-900 flex flex-col pt-[env(safe-area-inset-top)]">
-      <div className="flex-1 overflow-auto pb-16">
+      <div className="flex-1 overflow-auto pb-[calc(4rem+env(safe-area-inset-bottom))]">
         <div className="max-w-2xl mx-auto">
           <Routes>
             <Route path="/" element={<Home />} />
