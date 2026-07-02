@@ -46,10 +46,12 @@ if (fetchError) {
   process.exit(1)
 }
 
+const normalize = s => s.toLowerCase().replace(/[^a-z0-9]/g, '')
+
 function findSprite(variant, baseNameLower) {
   return sprites.find(s => {
     const sVariant = s.variant ?? null
-    return sVariant === variant && s.base_name.toLowerCase() === baseNameLower
+    return sVariant === variant && normalize(s.base_name) === normalize(baseNameLower)
   })
 }
 
