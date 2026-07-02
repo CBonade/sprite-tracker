@@ -5,7 +5,7 @@ export default function NavBar() {
   const { signOut } = useAuth()
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-gray-800 border-t border-gray-700 flex safe-area-inset-bottom">
+    <nav className="fixed bottom-0 left-0 right-0 bg-gray-800 border-t border-gray-700 flex pb-[env(safe-area-inset-bottom)]">
       <NavLink
         to="/"
         end

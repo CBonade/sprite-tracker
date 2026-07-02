@@ -42,7 +42,7 @@ function AppShell() {
   if (!profile) return <DisplayNameModal />
 
   return (
-    <div className="min-h-screen bg-gray-900 flex flex-col">
+    <div className="min-h-screen bg-gray-900 flex flex-col pt-[env(safe-area-inset-top)]">
       <div className="flex-1 overflow-auto pb-16">
         <div className="max-w-2xl mx-auto">
           <Routes>
