@@ -90,4 +90,4 @@ git push origin v1.0.0
 gh release create v1.0.0 --title "v1.0.0" --notes "..."
 ```
 
-Write release notes as a short bullet list of what's in the release. Current version in progress: **v1.0.0**.
+Write release notes as a short bullet list of what's in the release. Current version in progress: **v1.1.0**.
