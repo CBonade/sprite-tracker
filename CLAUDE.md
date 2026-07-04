@@ -4,7 +4,7 @@ Mobile-first web app for tracking a Fortnite sprite collection. Two users (owner
 
 ## Stack
 
-- **Frontend**: React + Vite 7 + Tailwind CSS, deployed to Netlify (auto-deploy on push to main)
+- **Frontend**: React + Vite 7 + Tailwind CSS, deployed to Vercel (auto-deploy on push to main)
 - **Backend**: Supabase (Postgres + Auth + RLS) — project ID `bbfnwswogaesrpifuoht`
 - **Auth**: Google OAuth, implicit flow (`flowType: 'implicit'` in `src/lib/supabase.js`)
 - **Repo**: github.com/CBonade/sprite-tracker (public, single owner — commit directly to main, no branches/PRs)
@@ -45,11 +45,11 @@ VITE_SUPABASE_ANON_KEY=<anon key>
 SUPABASE_SERVICE_ROLE_KEY=<service role key>
 ```
 
-`VITE_` vars are baked into the client bundle at build time — Netlify env var changes require a redeploy. `SUPABASE_SERVICE_ROLE_KEY` is server-only (used by the upsert script, never bundled).
+`VITE_` vars are baked into the client bundle at build time — Vercel env var changes require a redeploy. `SUPABASE_SERVICE_ROLE_KEY` is server-only (used by the upsert script, never bundled).
 
 ## Deployment
 
-Push to main → Netlify builds and deploys automatically. No manual deploy step needed. Sprite data changes (via upsert script) are live immediately without a redeploy.
+Push to main → Vercel builds and deploys automatically. No manual deploy step needed. Sprite data changes (via upsert script) are live immediately without a redeploy.
 
 ## Thursday drop workflow
 
