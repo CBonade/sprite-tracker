@@ -11,7 +11,9 @@ Mobile-first web app for tracking a Fortnite sprite collection. Two users (owner
 
 ## Data model
 
-**`sprites`** table: `base_name`, `variant` (`base`/`gold`/`gummy`/`galaxy`/`null` for one-offs), `full_name`, `rarity` (`rare`/`epic`/`legendary`/`mythic`/`special`), `is_starter`, `sort_order`, `image_url` (nullable — see "Sprite artwork" below)
+**`sprites`** table: `base_name`, `variant` (`base`/`gold`/`gummy`/`galaxy`/`holofoil`/`null` for one-offs), `full_name`, `rarity` (`rare`/`epic`/`legendary`/`mythic`/`special`), `is_starter`, `sort_order`, `image_url` (nullable — see "Sprite artwork" below)
+
+The variant list is expected to keep growing as the game introduces new cosmetic tiers (e.g. `holofoil` was added 2026-07-09) — it is not a fixed enum. Non-base variants (`gold`/`gummy`/`galaxy`/`holofoil`/…) always carry `rarity: "special"` and `is_starter: false`, matching the existing rows for that base_name regardless of the base variant's own `is_starter`. Adding a new variant tier requires a schema change first — see "Schema changes" below — then the same upsert flow as any other sprite.
 
 **`user_collections`** table: `user_id`, `sprite_id`, `status` (`acquired`/`mastered`). RLS allows a follower to read the followed user's rows.
 
@@ -46,6 +48,17 @@ SUPABASE_SERVICE_ROLE_KEY=<service role key>
 ```
 
 `VITE_` vars are baked into the client bundle at build time — Vercel env var changes require a redeploy. `SUPABASE_SERVICE_ROLE_KEY` is server-only (used by the upsert script, never bundled).
+
+## Schema changes
+
+This project has no linked Supabase CLI project directory and no `psql` connection string on file — schema changes (e.g. adding a new sprite variant tier) go through the Supabase Management API instead of the SQL editor:
+
+1. Get a Supabase personal access token (dashboard → Account → Access Tokens) if the cached one has expired, and store it: `security add-generic-password -s "cc/personal/supabase/bbfnwswogaesrpifuoht-pat" -a "cc" -w "<token>" -U`
+2. `export SUPABASE_ACCESS_TOKEN=$(security find-generic-password -s "cc/personal/supabase/bbfnwswogaesrpifuoht-pat" -a "cc" -w)`
+3. `npx --yes supabase link --project-ref bbfnwswogaesrpifuoht`
+4. `npx --yes supabase db query --linked "<SQL>"` — runs arbitrary SQL against the live DB via the Management API, no DB password needed
+
+This project shares its Supabase project (`bbfnwswogaesrpifuoht`) with droid-tycoon, so the same token/steps work for schema changes there too.
 
 ## Deployment
 
