@@ -1,24 +1,8 @@
-import { useEffect, useRef, useState } from 'react'
-import { toBlob } from 'html-to-image'
+import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
-import ShareCard from './ShareCard'
-
-// html-to-image's built-in cross-origin image fetching is unreliable on real
-// mobile browsers (silently produces blank tiles). Fetching each sprite image
-// ourselves and inlining it as a same-origin data URI sidesteps that entirely.
-async function toDataUrl(url) {
-  const res = await fetch(url)
-  const blob = await res.blob()
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader()
-    reader.onloadend = () => resolve(reader.result)
-    reader.onerror = reject
-    reader.readAsDataURL(blob)
-  })
-}
+import { generateShareImage } from '../lib/generateShareImage'
 
 export default function ShareButton({ userId, displayName }) {
-  const cardRef = useRef(null)
   const [data, setData] = useState(null)
   const [busy, setBusy] = useState(false)
 
@@ -30,19 +14,7 @@ export default function ShareButton({ userId, displayName }) {
       ])
       const map = {}
       for (const row of collectionData ?? []) map[row.sprite_id] = row.status
-
-      const sprites = await Promise.all(
-        (spritesData ?? []).map(async sprite => {
-          if (!sprite.image_url) return sprite
-          try {
-            return { ...sprite, image_url: await toDataUrl(sprite.image_url) }
-          } catch {
-            return sprite // fall back to the remote URL if the fetch fails
-          }
-        })
-      )
-
-      setData({ sprites, collection: map })
+      setData({ sprites: spritesData ?? [], collection: map })
     }
     load()
   }, [userId])
@@ -51,7 +23,7 @@ export default function ShareButton({ userId, displayName }) {
     if (busy || !data) return
     setBusy(true)
     try {
-      const blob = await toBlob(cardRef.current, { pixelRatio: 2 })
+      const blob = await generateShareImage({ displayName, sprites: data.sprites, collection: data.collection })
       if (!blob) throw new Error('Failed to generate image')
       const file = new File([blob], 'sprite-collection.png', { type: 'image/png' })
 
@@ -77,20 +49,12 @@ export default function ShareButton({ userId, displayName }) {
   }
 
   return (
-    <>
-      <button
-        onClick={handleShare}
-        disabled={busy || !data}
-        className="ml-auto px-3 py-1.5 rounded-lg bg-blue-600 text-white text-xs font-semibold active:scale-95 transition-transform disabled:opacity-50"
-      >
-        {busy ? 'Generating…' : 'Share'}
-      </button>
-
-      {data && (
-        <div style={{ position: 'fixed', top: 0, left: -99999, pointerEvents: 'none' }}>
-          <ShareCard ref={cardRef} displayName={displayName} sprites={data.sprites} collection={data.collection} />
-        </div>
-      )}
-    </>
+    <button
+      onClick={handleShare}
+      disabled={busy || !data}
+      className="ml-auto px-3 py-1.5 rounded-lg bg-blue-600 text-white text-xs font-semibold active:scale-95 transition-transform disabled:opacity-50"
+    >
+      {busy ? 'Generating…' : 'Share'}
+    </button>
   )
 }
