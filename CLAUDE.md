@@ -64,6 +64,8 @@ This project shares its Supabase project (`bbfnwswogaesrpifuoht`) with droid-tyc
 
 Push to main → Vercel builds and deploys automatically. No manual deploy step needed. Sprite data changes (via upsert script) are live immediately without a redeploy.
 
+**Commit per feature as usual, but do not push after every commit.** Vercel's free tier caps monthly deploys, and this project (and droid-tycoon, on the same plan) blew through that cap in under 2 days when every commit auto-deployed. Batch commits locally and push only once a full round of work is ready to ship, then push everything together in one go (multiple commits in that push is fine — each commit should still represent one feature/fix, per normal commit hygiene).
+
 ## Thursday drop workflow
 
 When new sprites drop, the user shares a screenshot. Parse it into the JSON format below and run the upsert script. `sort_order` is optional — the script auto-assigns from `max(sort_order) + 1`.
