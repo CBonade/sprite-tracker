@@ -3,6 +3,20 @@ import { toBlob } from 'html-to-image'
 import { supabase } from '../lib/supabase'
 import ShareCard from './ShareCard'
 
+// html-to-image's built-in cross-origin image fetching is unreliable on real
+// mobile browsers (silently produces blank tiles). Fetching each sprite image
+// ourselves and inlining it as a same-origin data URI sidesteps that entirely.
+async function toDataUrl(url) {
+  const res = await fetch(url)
+  const blob = await res.blob()
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onloadend = () => resolve(reader.result)
+    reader.onerror = reject
+    reader.readAsDataURL(blob)
+  })
+}
+
 export default function ShareButton({ userId, displayName }) {
   const cardRef = useRef(null)
   const [data, setData] = useState(null)
@@ -16,7 +30,19 @@ export default function ShareButton({ userId, displayName }) {
       ])
       const map = {}
       for (const row of collectionData ?? []) map[row.sprite_id] = row.status
-      setData({ sprites: spritesData ?? [], collection: map })
+
+      const sprites = await Promise.all(
+        (spritesData ?? []).map(async sprite => {
+          if (!sprite.image_url) return sprite
+          try {
+            return { ...sprite, image_url: await toDataUrl(sprite.image_url) }
+          } catch {
+            return sprite // fall back to the remote URL if the fetch fails
+          }
+        })
+      )
+
+      setData({ sprites, collection: map })
     }
     load()
   }, [userId])

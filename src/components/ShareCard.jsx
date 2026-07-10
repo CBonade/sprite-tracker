@@ -54,7 +54,6 @@ const ShareCard = forwardRef(function ShareCard({ displayName, sprites, collecti
                 {sprite.image_url && (
                   <img
                     src={sprite.image_url}
-                    crossOrigin="anonymous"
                     alt=""
                     style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: status ? 1 : 0.25 }}
                   />
