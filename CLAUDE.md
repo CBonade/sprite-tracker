@@ -97,12 +97,14 @@ Sprites without `image_url` yet fall back to the original colored block + text l
 
 ## Releases
 
-Tag and release on GitHub when the user asks. Use semantic versioning. Create the tag and release via `gh`:
+Every time a batch is pushed (see the push-batching note under "Deployment" above), tag a release and publish notes — this is routine, not something that waits for the user to ask. Use semantic versioning: bump minor for new features, patch for fixes/docs-only batches. Generate notes as a short bullet list from the commits since the last tag (`git log <last-tag>..HEAD --oneline`), grouped by feature/fix, not a raw commit dump.
 
 ```bash
-git tag v1.0.0
-git push origin v1.0.0
-gh release create v1.0.0 --title "v1.0.0" --notes "..."
+git tag v1.2.0
+git push origin v1.2.0
+gh release create v1.2.0 --title "v1.2.0" --notes "..."
 ```
+
+No in-app release-notes display yet — that's deferred to a future iteration. For now this is purely the tag + GitHub release.
 
 Write release notes as a short bullet list of what's in the release. Current version in progress: **v1.1.1**.
