@@ -51,14 +51,21 @@ SUPABASE_SERVICE_ROLE_KEY=<service role key>
 
 ## Schema changes
 
-This project has no linked Supabase CLI project directory and no `psql` connection string on file — schema changes (e.g. adding a new sprite variant tier) go through the Supabase Management API instead of the SQL editor:
+This project has no `psql` connection string on file — schema changes (e.g. adding a new sprite variant tier) run arbitrary SQL against the live DB through the Supabase **Management API**, authenticated with a **Supabase CLI login token** (not a hand-managed PAT):
 
-1. Get a Supabase personal access token (dashboard → Account → Access Tokens) if the cached one has expired, and store it: `security add-generic-password -s "cc/personal/supabase/bbfnwswogaesrpifuoht-pat" -a "cc" -w "<token>" -U`
-2. `export SUPABASE_ACCESS_TOKEN=$(security find-generic-password -s "cc/personal/supabase/bbfnwswogaesrpifuoht-pat" -a "cc" -w)`
-3. `npx --yes supabase link --project-ref bbfnwswogaesrpifuoht`
-4. `npx --yes supabase db query --linked "<SQL>"` — runs arbitrary SQL against the live DB via the Management API, no DB password needed
+1. Authenticate once via the browser: run `npx supabase login` in a **real terminal** (Terminal.app / iTerm). It must be an interactive TTY — the Claude Code `!` prefix and other non-TTY shells fail with `LegacyLoginMissingTokenError`. Login stores an access token in the macOS Keychain under service **`Supabase CLI`**; it stays valid across sessions until you log out or revoke it.
+2. Read that token and POST the SQL to the query endpoint:
+   ```bash
+   TOK=$(security find-generic-password -s "Supabase CLI" -w)
+   curl -s -X POST "https://api.supabase.com/v1/projects/bbfnwswogaesrpifuoht/database/query" \
+     -H "Authorization: Bearer $TOK" -H "Content-Type: application/json" \
+     -d '{"query": "<SQL>"}'
+   ```
+   Runs DDL or DML (multiple statements / `BEGIN … COMMIT` transactions allowed), returns rows as JSON, no DB password needed.
 
-This project shares its Supabase project (`bbfnwswogaesrpifuoht`) with droid-tycoon, so the same token/steps work for schema changes there too.
+This project shares its Supabase project (`bbfnwswogaesrpifuoht`) with droid-tycoon, so the same login works for schema **and data** changes there too.
+
+> Deprecated: the older flow stored a manually-generated personal access token in the Keychain entry `cc/personal/supabase/bbfnwswogaesrpifuoht-pat` and exported it as `SUPABASE_ACCESS_TOKEN`. That token expired (Management API returns 401) — prefer the `supabase login` flow above, which refreshes without copy-pasting tokens.
 
 ## Deployment
 
