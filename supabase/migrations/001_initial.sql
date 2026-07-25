@@ -22,7 +22,7 @@ create index profiles_display_name_idx on public.profiles (lower(display_name));
 create table public.sprites (
   id uuid primary key default gen_random_uuid(),
   base_name text not null,
-  variant text check (variant in ('base', 'gold', 'gummy', 'galaxy')),
+  variant text check (variant in ('base', 'gold', 'gummy', 'galaxy', 'holofoil', 'cube')),
   full_name text not null unique,
   rarity text not null check (rarity in ('rare', 'epic', 'legendary', 'mythic', 'special')),
   is_starter boolean default false not null,
