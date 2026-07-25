@@ -106,12 +106,16 @@ Sprites without `image_url` yet fall back to the original colored block + text l
 
 Every time a batch is pushed (see the push-batching note under "Deployment" above), tag a release and publish notes — this is routine, not something that waits for the user to ask. Use semantic versioning: bump minor for new features, patch for fixes/docs-only batches. Generate notes as a short bullet list from the commits since the last tag (`git log <last-tag>..HEAD --oneline`), grouped by feature/fix, not a raw commit dump.
 
+Always derive the next version from the **latest existing tag** — never from memory or a number written down in this file, which goes stale after every release:
+
 ```bash
-git tag v1.2.0
-git push origin v1.2.0
-gh release create v1.2.0 --title "v1.2.0" --notes "..."
+LAST=$(git describe --tags --abbrev=0)   # e.g. v1.3.0
+# choose NEXT by bumping minor (feature) or patch (fix/docs) from $LAST
+git tag "$NEXT"
+git push origin "$NEXT"
+gh release create "$NEXT" --title "$NEXT" --notes "..."
 ```
 
 No in-app release-notes display yet — that's deferred to a future iteration. For now this is purely the tag + GitHub release.
 
-Write release notes as a short bullet list of what's in the release. Current version in progress: **v1.1.1**.
+Write release notes as a short bullet list of what's in the release. The authoritative current version is whatever `git describe --tags --abbrev=0` reports — do not track it by hand here.
