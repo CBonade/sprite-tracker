@@ -1,7 +1,7 @@
 import crownMastered from '../assets/crown_mastered.png'
 
-const VARIANT_ORDER = ['base', 'gold', 'gummy', 'galaxy', 'holofoil', 'cube']
-const VARIANT_LABEL = { base: 'Base', gold: 'Gold', gummy: 'Gum', galaxy: 'Gal', holofoil: 'Holo', cube: 'Cube' }
+const VARIANT_ORDER = ['base', 'gold', 'gummy', 'galaxy', 'holofoil', 'cube', 'quack']
+const VARIANT_LABEL = { base: 'Base', gold: 'Gold', gummy: 'Gum', galaxy: 'Gal', holofoil: 'Holo', cube: 'Cube', quack: 'Quack' }
 
 const RARITY_CLASS = {
   rare: 'bg-blue-600',

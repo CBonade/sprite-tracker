@@ -4,7 +4,7 @@
 // Each sprite object (sort_order optional — auto-assigned if omitted):
 // {
 //   base_name: string,          e.g. "Water"
-//   variant: string | null,     "base" | "gold" | "gummy" | "galaxy" | "holofoil" | "cube" | null (for one-offs)
+//   variant: string | null,     "base" | "gold" | "gummy" | "galaxy" | "holofoil" | "cube" | "quack" | null (for one-offs)
 //   full_name: string,          e.g. "Gold Water Sprite"
 //   rarity: string,             "rare" | "epic" | "legendary" | "mythic" | "special"
 //   is_starter: boolean,

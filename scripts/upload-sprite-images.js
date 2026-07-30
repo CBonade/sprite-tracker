@@ -15,7 +15,7 @@ import { fileURLToPath } from 'url'
 const __dir = dirname(fileURLToPath(import.meta.url))
 const ASSETS_DIR = join(__dir, '..', 'src', 'assets')
 const BUCKET = 'sprite-images'
-const VARIANTS = ['base', 'gold', 'gummy', 'galaxy', 'holofoil', 'cube']
+const VARIANTS = ['base', 'gold', 'gummy', 'galaxy', 'holofoil', 'cube', 'quack']
 
 const url = process.env.VITE_SUPABASE_URL
 const key = process.env.SUPABASE_SERVICE_ROLE_KEY
